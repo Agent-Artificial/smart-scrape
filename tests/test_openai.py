@@ -3,14 +3,14 @@ import os
 import traceback
 from openai import OpenAI
 from openai import AsyncOpenAI
+from neurons.miners.agent_artificial import AgentArtificial
 
-OpenAI.api_key = os.environ.get('OPENAI_API_KEY')
-if not OpenAI.api_key:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+artificial = AgentArtificial()
 
-client = AsyncOpenAI(timeout=30)
 
-async def send_openai_request(prompt, engine="gpt-4-1106-preview"):
+client = AsyncOpenAI(timeout=30, api_key=artificial.api_key, base_url=artificial.base_url)
+
+async def send_openai_request(prompt, engine=artificial.model):
     try:
         stream = await client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],

@@ -6,7 +6,7 @@ import traceback
 import random
 import copy
 import bittensor as bt
-import template.utils as utils
+import tests.utils as utils
 import os
 import time
 import sys
@@ -19,7 +19,7 @@ from traceback import print_exception
 from base_validator import AbstractNeuron
 from template import QUERY_MINERS
 from template.misc import ttl_get_block
-from template.utils import resync_metagraph, save_logs_in_chunks
+from tests.utils import resync_metagraph, save_logs_in_chunks
 
 
 class Neuron(AbstractNeuron):

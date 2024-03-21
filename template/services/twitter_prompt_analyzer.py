@@ -3,11 +3,14 @@ import os
 import json
 import asyncio
 import random
-from template.utils import call_openai
+from tests.utils import call_openai
 from template.protocol import TwitterPromptAnalysisResult
 import bittensor as bt
 from template.dataset import MockTwitterQuestionsDataset
 from template.services.twitter_api_wrapper import TwitterAPIClient
+from neurons.miners.agent_artificial import AgentArtificial
+
+artificial = AgentArtificial()
 
 twitter_api_query_example = {
     "query": "(from:twitterdev -is:retweet) OR #twitterdev",
@@ -205,8 +208,8 @@ def get_fix_query_prompt(prompt, old_query, error, is_accuracy=True):
 class TwitterPromptAnalyzer:
     def __init__(
         self,
-        openai_query_model="gpt-3.5-turbo-0125",
-        openai_fix_query_model="gpt-4-1106-preview",
+        openai_query_model=artificial.model,
+        openai_fix_query_model=artificial.model,
     ):
         self.openai_query_model = openai_query_model
         self.openai_fix_query_model = openai_fix_query_model

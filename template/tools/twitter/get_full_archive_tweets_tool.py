@@ -5,7 +5,10 @@ from starlette.types import Send
 from pydantic import BaseModel, Field
 from template.services.twitter_prompt_analyzer import TwitterPromptAnalyzer
 from template.tools.base import BaseTool
+from neurons.miners.agent_artificial import AgentArtificial
 
+
+artificial = AgentArtificial()
 
 class GetFullArchiveTweetsSchema(BaseModel):
     query: str = Field(
@@ -34,13 +37,13 @@ class GetFullArchiveTweetsTool(BaseTool):
         self,
         query: str,  # run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
-        openai_query_model = self.tool_manager.miner.config.miner.openai_query_model
+        openai_query_model = artificial.model
         openai_fix_query_model = (
             self.tool_manager.miner.config.miner.openai_fix_query_model
         )
 
         client = TwitterPromptAnalyzer(
-            openai_query_model=openai_query_model,
+            openai_query_model=artificial.model,
             openai_fix_query_model=openai_fix_query_model,
         )
 

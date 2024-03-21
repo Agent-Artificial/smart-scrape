@@ -28,7 +28,7 @@ from neurons.validators.utils.tasks import TwitterTask
 
 from template.dataset import MockTwitterQuestionsDataset
 from template.services.twitter_api_wrapper import TwitterAPIClient
-from template.utils import save_logs
+from tests.utils import save_logs
 from template import QUERY_MINERS
 import asyncio
 

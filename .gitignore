@@ -4,7 +4,8 @@ template/__pycache__/
 __pycache__/
 *.pyc
 wandb/
-
+.env
+.venv
 .vscode
 
 state.json

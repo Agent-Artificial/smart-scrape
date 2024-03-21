@@ -2,6 +2,10 @@ import aiohttp
 import os
 import bittensor as bt
 from template.services.twitter_utils import TwitterUtils
+from neurons.miners.agent_artificial import AgentArtificial
+
+
+artificial = AgentArtificial()
 
 BEARER_TOKEN = os.environ.get("TWITTER_BEARER_TOKEN")
 
@@ -11,8 +15,8 @@ VALID_DOMAINS = ["twitter.com", "x.com"]
 class TwitterAPIClient:
     def __init__(
         self,
-        openai_query_model="gpt-3.5-turbo-0125",
-        openai_fix_query_model="gpt-4-1106-preview",
+        openai_query_model= artificial.model,
+        openai_fix_query_model= artificial.model,
     ):
         self.bearer_token = BEARER_TOKEN
         self.utils = TwitterUtils()

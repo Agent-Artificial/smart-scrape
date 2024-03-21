@@ -32,16 +32,13 @@ __weights_version__ = u64_max
 
 print("__version__", __version__)
 
-import os
 from openai import AsyncOpenAI
 from enum import Enum
+from neurons.miners.agent_artificial import AgentArtificial
 
-AsyncOpenAI.api_key = os.environ.get("OPENAI_API_KEY")
-if not AsyncOpenAI.api_key:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+artificial = AgentArtificial()
 
-client = AsyncOpenAI(timeout=90.0)
-
+client = AsyncOpenAI(api_key=artificial.api_key, base_url=artificial.base_url, timeout=90.0 )
 # Blacklist variables
 ALLOW_NON_REGISTERED = False
 PROMPT_BLACKLIST_STAKE = 20000
@@ -90,6 +87,6 @@ class QUERY_MINERS(Enum):
 # Import all submodules.
 from . import protocol
 from . import reward
-from . import utils
+from ..tests import utils
 from . import db
 from . import tools

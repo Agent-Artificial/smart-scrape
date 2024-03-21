@@ -16,10 +16,14 @@ import bittensor as bt
 import threading
 import multiprocessing
 import aiohttp
-from . import client
+from ..template import client
 from collections import deque
 from datetime import datetime
 from template.misc import ttl_get_block
+from neurons.miners.agent_artificial import AgentArtificial
+
+
+artificial = AgentArtificial()
 
 list_update_lock = asyncio.Lock()
 _text_questions_buffer = deque()
@@ -201,14 +205,14 @@ def extract_python_list(text: str):
     return None
 
 
-async def call_openai(messages, temperature, model, seed=1234, response_format=None):
+async def call_openai(messages, temperature=0.2, model=artificial.model, seed=1234, response_format=None):
     for attempt in range(2):
         bt.logging.trace(
             f"Calling Openai. Temperature = {temperature}, Model = {model}, Seed = {seed},  Messages = {messages}"
         )
         try:
             response = await client.chat.completions.create(
-                model=model,
+                model=artificial.model,
                 messages=messages,
                 temperature=temperature,
                 seed=seed,

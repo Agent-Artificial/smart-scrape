@@ -22,18 +22,19 @@ from transformers import GPT2Tokenizer
 from config import get_config, check_config
 from typing import List, Dict, Tuple
 
-from template.utils import get_version
+from tests.utils import get_version
 
 from template.protocol import IsAlive, ScraperStreamingSynapse
 from template.services.twitter_api_wrapper import TwitterAPIClient
 from template.db import DBClient, get_random_tweets
 from neurons.miners.scraper_miner import ScraperMiner
+from neurons.miners.agent_artificial import AgentArtificial
 
-OpenAI.api_key = os.environ.get("OPENAI_API_KEY")
-if not OpenAI.api_key:
-    raise ValueError(
-        "Please set the OPENAI_API_KEY environment variable. See here: https://github.com/surcyf123/smart-scrape/blob/main/docs/env_variables.md"
-    )
+artificial = AgentArtificial()
+
+OpenAI.api_key = artificial.api_key
+OpenAI.base_url = artificial.base_url
+
 
 TWITTER_BEARER_TOKEN = os.environ.get("TWITTER_BEARER_TOKEN")
 if not TWITTER_BEARER_TOKEN:
@@ -52,7 +53,8 @@ if not wandb_api_key and not netrc_path.exists():
         "Please log in to wandb using `wandb login` or set the WANDB_API_KEY environment variable."
     )
 
-client = AsyncOpenAI(timeout=60.0)
+client = AsyncOpenAI(timeout=60.0, api_key=artificial.api_key, base_url=artificial.base_url)
+
 valid_hotkeys = []
 
 

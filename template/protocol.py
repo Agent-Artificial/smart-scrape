@@ -11,6 +11,9 @@ from enum import Enum
 from aiohttp import ClientResponse
 from template.services.twitter_utils import TwitterUtils
 from template.services.web_search_utils import WebSearchUtils
+from neurons.miners.agent_artificial import AgentArtificial
+
+artificial = AgentArtificial()
 
 
 class IsAlive(bt.Synapse):
@@ -114,7 +117,7 @@ class ScraperStreamingSynapse(bt.StreamingSynapse):
     )
 
     model: Optional[str] = pydantic.Field(
-        "",
+        default=artificial.model,
         title="model",
         description="The model that which to use when calling openai for your response.",
     )

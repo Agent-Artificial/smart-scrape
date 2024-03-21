@@ -18,11 +18,7 @@ from template.protocol import ScraperTextRole
 from openai import AsyncOpenAI
 from template.tools.response_streamer import ResponseStreamer
 from template.protocol import TwitterPromptAnalysisResult
-
-OpenAI.api_key = os.environ.get("OPENAI_API_KEY")
-
-if not OpenAI.api_key:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+from neurons.miners.agent_artificial import AgentArtificial
 
 
 TEMPLATE = """Answer the following question as best you can.
@@ -50,13 +46,15 @@ Here is example of JSON array format to return. Keep in mind that this is exampl
 ]
 """
 
+artificial = AgentArtificial()
+
 prompt_template = PromptTemplate.from_template(TEMPLATE)
 
-client = AsyncOpenAI(timeout=60.0)
+client = AsyncOpenAI(timeout=60.0, api_key=artificial.api_key, base_url=artificial.base_url)
 
 
 class ToolManager:
-    openai_summary_model: str = "gpt-3.5-turbo-0125"
+    openai_summary_model: str = artificial.model
     all_tools: List[BaseTool]
     manual_tool_names: List[str]
     tool_name_to_instance: Dict[str, BaseTool]
@@ -163,7 +161,7 @@ class ToolManager:
 
         # Otherwise identify tools to use based on prompt
         # TODO model
-        llm = ChatOpenAI(model_name="gpt-4-0125-preview", temperature=0.2)
+        llm = ChatOpenAI(model=artificial.model, temperature=0.2, api_key=artificial.api_key, base_url=artificial.base_url)
         chain = prompt_template | llm
 
         tools_description = render_text_description(self.all_tools)
@@ -243,9 +241,9 @@ class ToolManager:
         """
         messages = [{"role": "user", "content": content}]
         response = await client.chat.completions.create(
-            model=model,
+            model=artificial.model,
             messages=messages,
-            temperature=0.4,
+            temperature=0.2,
             stream=True,
         )
 
@@ -295,7 +293,7 @@ class ToolManager:
         ]
 
         response = await client.chat.completions.create(
-            model=self.openai_summary_model,
+            model=artificial.model,
             messages=messages,
             temperature=0.1,
             stream=True,

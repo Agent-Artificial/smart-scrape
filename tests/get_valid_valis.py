@@ -6,7 +6,7 @@ import traceback
 import template
 import argparse
 import bittensor as bt
-from template.utils import get_version
+from tests.utils import get_version
 
 valid_hotkeys = []
 

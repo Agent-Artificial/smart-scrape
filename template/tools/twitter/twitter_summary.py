@@ -1,7 +1,10 @@
 from openai import AsyncOpenAI
 from template.protocol import TwitterPromptAnalysisResult, ScraperTextRole
+from neurons.miners.agent_artificial import AgentArtificial
 
-client = AsyncOpenAI(timeout=60.0)
+artificial = AgentArtificial()
+
+client = AsyncOpenAI(timeout=60.0, api_key=artificial.api_key, base_url=artificial.base_url)
 
 
 SYSTEM_MESSAGE = """
@@ -61,7 +64,7 @@ async def summarize_twitter_data(
     ]
 
     res = await client.chat.completions.create(
-        model=model,
+        model=artificial.model,
         messages=messages,
         temperature=0.1,
         stream=True,

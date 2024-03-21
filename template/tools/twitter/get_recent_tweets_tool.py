@@ -5,6 +5,9 @@ from pydantic import BaseModel, Field
 from starlette.types import Send
 from template.tools.base import BaseTool
 from template.services.twitter_prompt_analyzer import TwitterPromptAnalyzer
+from neurons.miners.agent_artificial import AgentArtificial
+
+artificial = AgentArtificial()
 
 
 class GetRecentTweetsToolSchema(BaseModel):
@@ -35,13 +38,13 @@ class GetRecentTweetsTool(BaseTool):
         query: str,  # run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         """Tweet message and return."""
-        openai_query_model = self.tool_manager.miner.config.miner.openai_query_model
+        openai_query_model = artificial.model
         openai_fix_query_model = (
             self.tool_manager.miner.config.miner.openai_fix_query_model
         )
 
         client = TwitterPromptAnalyzer(
-            openai_query_model=openai_query_model,
+            openai_query_model= artificial.model,
             openai_fix_query_model=openai_fix_query_model,
         )
 

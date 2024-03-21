@@ -2,9 +2,16 @@ import bittensor as bt
 import argparse
 import os
 from distutils.util import strtobool
+from neurons.miners.agent_artificial import AgentArtificial
+
+
+artificial = AgentArtificial()
+
 
 def str2bool(v):
     return bool(strtobool(v))
+
+
 
 
 def check_config(cls, config: "bt.Config"):
@@ -89,19 +96,19 @@ def get_config() -> "bt.Config":
 
     parser.add_argument(
         "--miner.openai_summary_model",
-        default="gpt-3.5-turbo-0125",
+        default=artificial.choose_model(),
         help="OpenAI model used for summarizing content.",
     )
 
     parser.add_argument(
         "--miner.openai_query_model",
-        default="gpt-3.5-turbo-0125",
+        default=artificial.choose_model(),
         help="OpenAI model used for generating queries.",
     )
 
     parser.add_argument(
         "--miner.openai_fix_query_model",
-        default="gpt-4-1106-preview",
+        default=artificial.choose_model(),
         help="OpenAI model used for fixing queries.",
     )
 

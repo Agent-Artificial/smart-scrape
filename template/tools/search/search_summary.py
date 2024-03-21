@@ -1,7 +1,11 @@
 from openai import AsyncOpenAI
 from template.protocol import ScraperTextRole
+from neurons.miners.agent_artificial import AgentArtificial
 
-client = AsyncOpenAI(timeout=60.0)
+
+artificial = AgentArtificial()
+
+client = AsyncOpenAI(timeout=60.0, base_url=artificial.base_url, api_key=artificial.api_key)
 
 
 SYSTEM_MESSAGE = """
@@ -48,7 +52,7 @@ async def summarize_search_data(prompt: str, model: str, data):
     ]
 
     res = await client.chat.completions.create(
-        model=model,
+        model=artificial.model,
         messages=messages,
         temperature=0.1,
         stream=True,

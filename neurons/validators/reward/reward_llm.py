@@ -7,7 +7,7 @@ import asyncio
 import bittensor as bt
 import re
 import time
-from template.utils import call_openai
+from tests.utils import call_openai
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from neurons.validators.utils.prompts import (
     extract_score_and_explanation,
@@ -17,6 +17,9 @@ from neurons.validators.utils.prompts import ScoringPrompt
 from enum import Enum
 import torch
 from transformers import pipeline
+from neurons.miners.agent_artificial import AgentArtificial
+
+artificial = AgentArtificial()
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -34,7 +37,7 @@ class ScoringSource(Enum):
 class RewardLLM:
     def __init__(self):
         self.tokenizer = None
-        self.model = None
+        self.model = artificial.model
         self.device = None
         self.pipe = None
         self.scoring_prompt = ScoringPrompt()
@@ -138,7 +141,7 @@ class RewardLLM:
                         return await call_openai(
                             messages=message,
                             temperature=0.2,
-                            model="gpt-3.5-turbo-16k",
+                            model=self.model,
                         )
                     except Exception as e:
                         print(f"Error sending message to OpenAI: {e}")
@@ -237,7 +240,7 @@ class RewardLLM:
                 max_new_tokens=50,
                 do_sample=True,
                 temperature=0.2,
-                top_k=50,
+                top_k=10,
                 top_p=0.95,
             )
 
